@@ -320,6 +320,14 @@ const PresaleContextProvider = ({ children }) => {
     if (buyTokenIsSuccess) {
       buyTokenSuccessMsg();
       refreshData();
+      
+      // Auto-dismiss the success notification after 3 seconds
+      const timeoutId = setTimeout(() => {
+        setIsActiveNotification(false);
+        setNotificationDone(false);
+      }, 3000);
+      
+      return () => clearTimeout(timeoutId);
     }
   }, [buyTokenIsSuccess, refreshData]);
 
