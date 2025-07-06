@@ -20,8 +20,8 @@ const PORT = process.env.PORT || 12001;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running at http://0.0.0.0:${PORT}`);
   if (PORT === 12000) {
-    console.log(`Access via: https://work-1-fjalhbqrtncbdkgc.prod-runtime.all-hands.dev`);
+    console.log(`Access via: https://work-1-mkjzfmdgiluqxzzo.prod-runtime.all-hands.dev`);
   } else if (PORT === 12001) {
-    console.log(`Access via: https://work-2-fjalhbqrtncbdkgc.prod-runtime.all-hands.dev`);
+    console.log(`Access via: https://work-2-mkjzfmdgiluqxzzo.prod-runtime.all-hands.dev`);
   }
 });

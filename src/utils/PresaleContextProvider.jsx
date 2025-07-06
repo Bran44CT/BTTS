@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { PresaleContext } from "./PresaleContext";
 import Notification from "../components/notification/Notification";
+import { useAggregatedPresaleData } from "./AggregatedPresaleContextProvider";
 import { chainInfo, chainConfig } from "../contracts/chainConfig";
 import {
   useAccount,
@@ -280,6 +281,9 @@ const PresaleContextProvider = ({ children }) => {
   const [notificationDone, setNotificationDone] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState("");
 
+  // grab the aggregated‐data refresh fn
+  const { refreshData } = useAggregatedPresaleData();
+
   const buyTokenLoadingMsg = (textMsg) => {
     setIsActiveNotification(true);
     setNotificationMsg(textMsg);
@@ -290,11 +294,15 @@ const PresaleContextProvider = ({ children }) => {
     setNotificationMsg("Your transaction has been successfully completed");
   };
 
+  // Handle loading state
   useEffect(() => {
     if (buyTokenIsLoading) {
       buyTokenLoadingMsg("Transaction Processing. Click 'Confirm'.");
     }
+  }, [buyTokenIsLoading]);
 
+  // Handle error state
+  useEffect(() => {
     if (buyTokenError) {
       setIsActiveNotification(false);
       setPresaleStatus(buyTokenError?.shortMessage);
@@ -305,25 +313,23 @@ const PresaleContextProvider = ({ children }) => {
 
       return () => clearTimeout(timeoutId);
     }
+  }, [buyTokenError]);
 
+  // ▶️ NEW: after a successful purchase, just re-fetch totals—no full reload
+  useEffect(() => {
     if (buyTokenIsSuccess) {
       buyTokenSuccessMsg();
-
+      refreshData();
+      
+      // Auto-dismiss the success notification after 3 seconds
       const timeoutId = setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-
+        setIsActiveNotification(false);
+        setNotificationDone(false);
+      }, 3000);
+      
       return () => clearTimeout(timeoutId);
     }
-  }, [
-    isActiveNotification,
-    notificationDone,
-    notificationMsg,
-    buyTokenData,
-    buyTokenIsLoading,
-    buyTokenError,
-    buyTokenIsSuccess,
-  ]);
+  }, [buyTokenIsSuccess, refreshData]);
 
   // Clear inputs when network or wallet changes
   useEffect(() => {

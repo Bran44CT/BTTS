@@ -33,13 +33,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Rainbowkit>
         <StyledThemeProvider theme={ThemeStyles}>
           <GlobalStyles />
-          <PresaleContextProvider>
-            <AggregatedPresaleContextProvider>
+          <AggregatedPresaleContextProvider>
+            <PresaleContextProvider>
               <ModalContextProvider>
                 <App />
               </ModalContextProvider>
-            </AggregatedPresaleContextProvider>
-          </PresaleContextProvider>
+            </PresaleContextProvider>
+          </AggregatedPresaleContextProvider>
         </StyledThemeProvider>
       </Rainbowkit>
     </ThemeProvider>
